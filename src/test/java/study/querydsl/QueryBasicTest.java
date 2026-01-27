@@ -10,6 +10,8 @@ import org.springframework.transaction.annotation.Transactional;
 import study.querydsl.entity.Member;
 import study.querydsl.entity.Team;
 
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static study.querydsl.entity.QMember.member;
 
@@ -90,5 +92,14 @@ public class QueryBasicTest {
                 .fetchOne();
 
         assertThat(findMember.getUsername()).isEqualTo("member1");
+    }
+
+    @Test
+    public void resultFetch(){
+        //List 리스트 조회, 데이터 없으면 빈 리스트 반환
+        List<Member> fetch = queryFactory
+                .select(member)
+                .from(member)
+                .fetch();
     }
 }
