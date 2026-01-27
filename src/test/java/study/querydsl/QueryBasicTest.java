@@ -155,7 +155,7 @@ public class QueryBasicTest {
     }
 
     @Test
-    public void pafing1(){
+    public void paging1(){
         List<Member> result = queryFactory
                 .selectFrom(member)
                 .orderBy(member.username.desc())
@@ -165,4 +165,7 @@ public class QueryBasicTest {
 
         assertThat(result.size()).isEqualTo(2);
     }
+
+    @Test
+    public void
 }
