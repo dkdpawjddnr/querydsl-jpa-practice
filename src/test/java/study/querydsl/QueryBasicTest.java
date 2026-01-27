@@ -101,5 +101,10 @@ public class QueryBasicTest {
                 .select(member)
                 .from(member)
                 .fetch();
+
+        //단 건 조회, 결과가 없으면 null, 둘 이상이면 에러
+        Member findMember1 = queryFactory
+                .selectFrom(member)
+                .fetchOne();
     }
 }
