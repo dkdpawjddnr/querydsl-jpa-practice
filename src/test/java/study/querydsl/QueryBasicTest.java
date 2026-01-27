@@ -120,5 +120,10 @@ public class QueryBasicTest {
 
         results.getTotal();
         List<Member> content = results.getResults();
+
+        //count 쿼리로 변경
+        long count = queryFactory
+                .selectFrom(member)
+                .fetchCount();
     }
 }
