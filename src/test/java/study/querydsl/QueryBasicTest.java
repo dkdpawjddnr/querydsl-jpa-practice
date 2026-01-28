@@ -243,4 +243,22 @@ public class QueryBasicTest {
                 .extracting("username")
                 .containsExactly("member1", "member2");
     }
+    /**
+     * 세타 조인
+     * 회원의 이름이 팀 이름과 같은 회원 조인
+     */
+    @Test
+    public void theta_join(){
+        em.persist(new Member("teamA"));
+        em.persist(new Member("teamB"));
+
+        List<Member> result = queryFactory.select(member)
+                .from(member, team)
+                .where(member.username.eq(team.name))
+                .fetch();
+
+        assertThat(result)
+                .extracting("username")
+                .containsExactly("teamA", "teamB");
+    }
 }
