@@ -29,7 +29,7 @@ public class QueryBasicTest {
     JPAQueryFactory queryFactory;
 
     @BeforeEach // 각각 개별 테스르 실행 전에 이 코드를 실행해줌
-    public void before(){
+    public void before() {
         queryFactory = new JPAQueryFactory(em);
 
         Team teamA = new Team("teamA");
@@ -49,10 +49,10 @@ public class QueryBasicTest {
     }
 
     @Test
-    public void startJPQL(){
+    public void startJPQL() {
         //member1 찾기
         String qlString = "select m from Member m " +
-                          "where m.username = :username";
+                "where m.username = :username";
         Member findMember = em.createQuery(qlString, Member.class)
                 .setParameter("username", "member1")
                 .getSingleResult();
@@ -61,7 +61,7 @@ public class QueryBasicTest {
     }
 
     @Test
-    public void startQuerydsl(){
+    public void startQuerydsl() {
 
         Member findMember = queryFactory
                 .select(member)
@@ -73,7 +73,7 @@ public class QueryBasicTest {
     }
 
     @Test
-    public void search(){
+    public void search() {
         Member findMember = queryFactory
                 .select(member)
                 .from(member)
@@ -85,7 +85,7 @@ public class QueryBasicTest {
     }
 
     @Test
-    public void searchAndParam(){
+    public void searchAndParam() {
         Member findMember = queryFactory
                 .select(member)
                 .from(member)
@@ -99,7 +99,7 @@ public class QueryBasicTest {
     }
 
     @Test
-    public void resultFetch(){
+    public void resultFetch() {
         //List 리스트 조회, 데이터 없으면 빈 리스트 반환
         List<Member> fetch = queryFactory
                 .select(member)
@@ -137,7 +137,7 @@ public class QueryBasicTest {
      * 단, 2에서 회원 이름이 없으면 마지막에 출력(nulls last)
      */
     @Test
-    public void sort(){
+    public void sort() {
         em.persist(new Member(null, 100));
         em.persist(new Member("member5", 100));
         em.persist(new Member("member6", 100));
@@ -158,7 +158,7 @@ public class QueryBasicTest {
     }
 
     @Test
-    public void paging1(){
+    public void paging1() {
         List<Member> result = queryFactory
                 .selectFrom(member)
                 .orderBy(member.username.desc())
@@ -170,7 +170,7 @@ public class QueryBasicTest {
     }
 
     @Test
-    public void paging2(){
+    public void paging2() {
         //전체 조회수가 필요할 땐 fetchResults()
         QueryResults<Member> queryResults = queryFactory
                 .selectFrom(member)
@@ -232,7 +232,7 @@ public class QueryBasicTest {
      * 팀 A에 소속된 모든 회원
      */
     @Test
-    public void join(){
+    public void join() {
         List<Member> result = queryFactory
                 .selectFrom(member)
                 .join(member.team, team)
@@ -243,12 +243,13 @@ public class QueryBasicTest {
                 .extracting("username")
                 .containsExactly("member1", "member2");
     }
+
     /**
      * 세타 조인
      * 회원의 이름이 팀 이름과 같은 회원 조인
      */
     @Test
-    public void theta_join(){
+    public void theta_join() {
         em.persist(new Member("teamA"));
         em.persist(new Member("teamB"));
 
@@ -269,12 +270,33 @@ public class QueryBasicTest {
      * and t.name ='teamA'
      */
     @Test
-    public void join_on_filtering() throws Exception{
+    public void join_on_filtering() throws Exception {
         List<Tuple> result = queryFactory
                 .select(member, team)
                 .from(member)
                 .leftJoin(member.team, team)
                 .on(team.name.eq("teamA"))
+                .fetch();
+
+        for (Tuple tuple : result) {
+            System.out.println("tuple = " + tuple);
+        }
+    }
+
+    /**
+     * 연관관계 없는 엔티티 외부 조인
+     * 회원의 이름이 팀 이름과 같은 대상 외부 조인
+     */
+    @Test
+    public void join_on_no_relation(){
+        em.persist(new Member("teamA"));
+        em.persist(new Member("teamB"));
+        em.persist(new Member("teamC"));
+
+        List<Tuple> result = queryFactory
+                .select(member, team)
+                .from(member)
+                .leftJoin(team).on(member.username.eq(team.name)) //id로 매칭으로 하는게 아니라 team.name으로만 필터링된다.
                 .fetch();
 
         for (Tuple tuple : result) {
