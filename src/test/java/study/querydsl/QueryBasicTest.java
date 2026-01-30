@@ -385,7 +385,7 @@ public class QueryBasicTest {
      * 서브쿼리 여러 건 처리 in 사용
      */
     @Test
-    public void subQueryIn() throws Exception{
+    public void subQueryIn() throws Exception {
         QMember memberSub = new QMember("memberSub");
 
         List<Member> result = queryFactory
@@ -399,9 +399,23 @@ public class QueryBasicTest {
                 .fetch();
 
         assertThat(result).extracting("age")
-                        .containsExactly(20, 30, 40);
+                .containsExactly(20, 30, 40);
+    }
 
-        assertThat(result).extracting("age")
-                .containsExactly(30, 40);
+    @Test
+    public void selectSubQuery(){
+        QMember memberSub = new QMember("memberSub");
+
+        List<Tuple> result = queryFactory
+                .select(member.username,
+                        JPAExpressions
+                                .select(memberSub.age.avg())
+                                .from(memberSub))
+                .from(member)
+                .fetch();
+
+        for(Tuple tuple : result){
+            System.out.println("tuple = " + tuple);
+        }
     }
 }
