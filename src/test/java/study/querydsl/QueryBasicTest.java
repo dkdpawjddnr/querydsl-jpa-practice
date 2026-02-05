@@ -2,6 +2,7 @@ package study.querydsl;
 
 import com.querydsl.core.QueryResults;
 import com.querydsl.core.Tuple;
+import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.CaseBuilder;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.JPAExpressions;
@@ -512,5 +513,17 @@ public class QueryBasicTest {
         for (MemberDto memberDto : result){
             System.out.println("memberDto = " + memberDto);
         }
+    }
+
+    @Test
+    public void findDtoBySetter(){
+        List<MemberDto> result = queryFactory
+                //bean() getter, setter 세터로 데이터를 인젝션 해준다.
+                //MemberDto.class 타입 지정해줘야 함
+                .select(Projections.bean(MemberDto.class,
+                        member.username,
+                        member.age))
+                .from(member)
+                .fetch();
     }
 }
