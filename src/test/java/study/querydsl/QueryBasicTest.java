@@ -658,4 +658,17 @@ public class QueryBasicTest {
     private BooleanExpression allEq(String usernameCond, Integer ageCond){
         return usernameEq(usernameCond).and(ageEq(ageCond));
     }
+
+    @Test
+    public void bulkUpdate(){
+        long count = queryFactory
+                .update(member)
+                .set(member.username, "비회원")
+                .where(member.age.lt(28))
+                .execute();
+
+        // 벌크연산을 실행하고 나면 영속성 컨텍스트를 초기화 해주는게 좋다.
+        em.flush();
+        em.clear();
+    }
 }
