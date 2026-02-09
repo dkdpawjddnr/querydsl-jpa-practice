@@ -671,4 +671,12 @@ public class QueryBasicTest {
         em.flush();
         em.clear();
     }
+
+    @Test
+    public void bulkAdd(){
+        queryFactory
+                .update(member)
+                .set(member.age, member.age.add(-1))
+                .execute();
+    }
 }
