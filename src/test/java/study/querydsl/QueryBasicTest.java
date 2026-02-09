@@ -687,4 +687,18 @@ public class QueryBasicTest {
                 .where(member.age.gt(18))
                 .execute();
     }
+
+    @Test
+    public void sqlFunction(){
+        List<String> result = queryFactory
+                .select(Expressions.stringTemplate(
+                        "function('replace', {0}, {1}, {2})",
+                        member.username, "member", "M"))
+                .from(member)
+                .fetch();
+
+        for (String s : result){
+            System.out.println("s = " + s);
+        }
+    }
 }
