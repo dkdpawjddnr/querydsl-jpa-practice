@@ -75,6 +75,9 @@ public class MemberJpaRepository {
         if(condition.getAgeGoe() != null){
             builder.and(member.age.goe(condition.getAgeGoe()));
         }
+        if(condition.getAgeLoe() != null){
+            builder.and(member.age.loe(condition.getAgeLoe()));
+        }
 
         return queryFactory
                 .select(new QMemberTeamDto(
