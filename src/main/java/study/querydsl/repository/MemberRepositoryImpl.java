@@ -25,13 +25,14 @@ import static study.querydsl.entity.QTeam.team;
 
 public class MemberRepositoryImpl extends QuerydslRepositorySupport implements MemberRepositoryCustom{
 
-//    private final JPAQueryFactory queryFactory;
+    private final JPAQueryFactory queryFactory;
 //
 //    public MemberRepositoryImpl(EntityManager em) {
 //        this.queryFactory = new JPAQueryFactory(em);
 //    }
-    public MemberRepositoryImpl(){
+    public MemberRepositoryImpl(EntityManager em){
         super(Member.class);
+        this.queryFactory = new JPAQueryFactory(em);
     }
 
     @Override
