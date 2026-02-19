@@ -23,21 +23,20 @@ import java.util.List;
 import static study.querydsl.entity.QMember.member;
 import static study.querydsl.entity.QTeam.team;
 
-public class MemberRepositoryImpl extends QuerydslRepositorySupport implements MemberRepositoryCustom{
+public class MemberRepositoryImpl extends QuerydslRepositorySupport implements MemberRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;
-//
 //    public MemberRepositoryImpl(EntityManager em) {
 //        this.queryFactory = new JPAQueryFactory(em);
 //    }
-    public MemberRepositoryImpl(EntityManager em){
+    public MemberRepositoryImpl(EntityManager em) {
         super(Member.class);
         this.queryFactory = new JPAQueryFactory(em);
     }
 
     @Override
     public List<MemberTeamDto> search(MemberSearchCondition condition) {
-        from(member)
+        return from(member)
                 .leftJoin(member.team, team)
                 .where(usernameEq(condition.getUsername()),
                         teamNameEq(condition.getTeamName()),
@@ -51,6 +50,7 @@ public class MemberRepositoryImpl extends QuerydslRepositorySupport implements M
                         team.id,
                         team.name))
                 .fetch();
+    }
 //        return queryFactory
 //                .select(new QMemberTeamDto(
 //                        member.id,
@@ -65,7 +65,6 @@ public class MemberRepositoryImpl extends QuerydslRepositorySupport implements M
 //                        ageGoe(condition.getAgeGoe()),
 //                        ageLoe(condition.getAgeLoe()))
 //                .fetch();
-    }
 
     @Override
     public Page<MemberTeamDto> searchPageSimple(MemberSearchCondition condition, Pageable pageable) {
