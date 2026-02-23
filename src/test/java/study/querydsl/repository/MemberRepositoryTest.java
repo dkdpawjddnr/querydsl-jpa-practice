@@ -69,6 +69,7 @@ class MemberRepositoryTest {
         List<MemberTeamDto> result = memberRepository.search(condition);
 
         assertThat(result).extracting("username").containsExactly("member4");
+        System.out.println("result = " + result);
     }
 
     @Test
