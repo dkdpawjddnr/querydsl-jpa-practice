@@ -20,3 +20,32 @@ Data Access: Spring Data JPA, Querydsl-JPA
 Database: H2 (In-memory)
 
 Library: Querydsl-Apt, Lombok, JUnit5, AssertJ
+
+🏗️ 엔티티 설계 (Entity Design)
+
+프로젝트의 핵심 도메인 모델입니다. 양방향 연관관계와 지연 로딩을 고려하여 설계했습니다.
+
+Member: 이름(username), 나이(age), 팀(Team) 정보를 가짐.
+
+Team: 팀명(name), 소속 회원들(List<Member>)을 가짐.
+
+연관관계 전략: @ManyToOne(fetch = FetchType.LAZY)를 통해 불필요한 조인을 방지하고 성능을 최적화했습니다.
+
+🔥 핵심 해결 과제
+
+1. JPQL vs Querydsl
+JPQL: 문자열 기반으로 오타 발생 시 런타임에 에러가 발생함.
+
+Querydsl: 자바 코드로 쿼리를 작성하여 컴파일 시점에 문법 오류를 발견하고, IDE의 자동 완성 기능을 100% 활용함.
+
+2. 동적 쿼리 해결 (Dynamic Query)
+가장 강력한 기능인 동적 쿼리를 두 가지 방식으로 구현해 보았습니다.
+
+BooleanBuilder 활용
+
+Where 다중 파라미터 사용 (추천): 가독성이 높고 메서드 재사용이 가능함.
+
+3. 성능 최적화 (Projection & Paging)
+Projection: 필요한 필드만 선택해서 조회하여 네트워크 부하를 줄임 (@QueryProjection 활용).
+
+Paging: Spring Data JPA의 Pageable과 Querydsl을 연동하고, 카운트 쿼리 최적화(countQuery)를 적용했습니다.
